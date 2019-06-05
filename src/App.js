@@ -53,6 +53,7 @@ const data = [
 class DrumPad extends Component {
   componentDidMount() {
     document.addEventListener("keydown", this.handleKeyDown);
+    window.focus();
   }
 
   componentWillUnmount() {
@@ -102,7 +103,7 @@ class App extends Component {
   render() {
     return (
       <div id="drum-machine">
-        <div id="display">{this.state.display}</div>
+        <h1 id="display">{this.state.display}</h1>
         <div id="drum-pads">
           {data.map(d => (
             <DrumPad
