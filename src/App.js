@@ -51,15 +51,32 @@ const data = [
 ];
 
 class DrumPad extends Component {
+  componentDidMount() {
+    document.addEventListener("keydown", this.handleKeyDown);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener("keydown", this.handleKeyDown);
+  }
+
+  handleKeyDown = e => {
+    if (e.keyCode === this.props.letter.charCodeAt()) {
+      this.audio.play();
+      this.audio.currentTime = 0;
+      this.props.handleDisplay(this.props.id);
+    }
+  };
+
   handleClick = () => {
     this.audio.play();
     this.audio.currentTime = 0;
+    this.props.handleDisplay(this.props.id);
   };
 
   render() {
     return (
       <div className="drum-pad" id={this.props.id} onClick={this.handleClick}>
-        <p>{this.props.letter}</p>
+        <h1>{this.props.letter}</h1>
         <audio
           ref={ref => (this.audio = ref)}
           className="clip"
@@ -72,13 +89,28 @@ class DrumPad extends Component {
 }
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      display: "Click or press a button to play music!"
+    };
+  }
+
+  handleDisplay = display => this.setState({ display });
+
   render() {
     return (
       <div id="drum-machine">
-        <div id="display" />
+        <div id="display">{this.state.display}</div>
         <div id="drum-pads">
           {data.map(d => (
-            <DrumPad id={d.id} letter={d.letter} src={d.src} />
+            <DrumPad
+              id={d.id}
+              letter={d.letter}
+              src={d.src}
+              handleDisplay={this.handleDisplay}
+            />
           ))}
         </div>
       </div>
